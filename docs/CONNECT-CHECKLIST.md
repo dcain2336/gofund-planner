@@ -9,13 +9,14 @@ each step happens in the service's own dashboard, signed in as you.
       account David Scott Cain / arc.agent.ops@gmail.com, rules accepted, profile complete.
 - [x] GitHub repo: https://github.com/dcain2336/gofund-planner (public, created Nov 23).
 - [x] App deployed: https://gofund-planner.pages.dev
-- [x] Tracker slot: placeholder comment at the top of `<head>` in `index.html`.
+- [x] Traffic tracker: snippet installed in `index.html` `<head>` (Nov 23) — verify with
+      "Check installation" on the Ship or Die dashboard after the redeploy.
 
-## 1. Stripe — create the $39 Payment Link (~10 min)
+## 1. Stripe — create the $19.99 Payment Link (~10 min)
 
 1. Sign in to https://dashboard.stripe.com (use the existing Stripe account; create one if
    needed — free, no monthly fee).
-2. Products → Add product: name `GoFund Planner — lifetime license`, price $39 USD, one-time.
+2. Products → Add product: name `GoFund Planner — lifetime license`, price $19.99 USD, one-time.
 3. Create a **Payment Link** for that product. Copy the URL (looks like
    `https://buy.stripe.com/xxxxxxxxxxxxxx`).
 4. Open `app.js`, set `STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/…'` at the top,
@@ -37,18 +38,17 @@ Profit only counts if it flows through a TrustMRR-connected account from day one
    public profile; the leaderboard picks it up from there.
 4. Confirm the GoFund Planner listing shows up on TrustMRR before announcing the launch.
 
-## 3. Ship or Die traffic tracker — paste the snippet (~5 min)
+## 3. Ship or Die traffic tracker — installed Nov 23 (verify it)
 
-1. Open the Ship or Die dashboard: https://www.ship-or-die.com/100k-hackathon/dashboard
-2. Find the traffic-tracker install step and copy the snippet.
-3. Paste it in `index.html` where the `SHIP-OR-DIE-TRACKER` comment is (top of `<head>`),
-   replacing the comment. Commit + push, redeploy.
-4. Do this BEFORE posting the link anywhere — untracked visits don't count.
+1. The snippet is already in `index.html` (top of `<head>`), installed Nov 23 and deployed.
+2. Open the Ship or Die dashboard: https://www.ship-or-die.com/100k-hackathon/dashboard
+   and run "Check installation" — traffic should show connected.
+3. Do this BEFORE posting the link anywhere — untracked visits don't count.
 
 ## 4. Launch — distribution (the part that makes profit real)
 
 1. Email the app link to 10–20 churches you personally know — CCBC first, then the NC
-   Baptist / NextGen contacts. One short email each: what it does, $39, demo trip link.
+   Baptist / NextGen contacts. One short email each: what it does, $19.99, demo trip link.
 2. Post the demo in the church-leader spaces you already belong to (no new accounts, no ads).
 3. Record a 60-second phone demo video (screen + voice) and link it from the repo README.
 4. $0 ad spend — ad spend subtracts from profit, and the channel is personal anyway.
