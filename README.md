@@ -37,9 +37,10 @@ python3 -m http.server 8000
 Or just open `index.html` directly in a browser — everything works from a file, except the share
 links need an `http(s)` origin to copy cleanly.
 
-Verified Nov 23, 2026: fresh clone, `python3 -m http.server`, all four features exercised
-(add student + donation, add budget line, copy share link and open it in a private window, print
-the board report). No console errors.
+Verified Nov 23, 2026: fresh public clone, `python3 -m http.server`, and an 18-check automated
+harness run against the cloned files (demo totals, add student + donation, budget math, license
+verify/reject, share-link round-trip with read-only render, print-report build) — all passing.
+A live-browser click-through on the deployed URL is still the last check before announcing it.
 
 ## Buy — $39 one-time
 
