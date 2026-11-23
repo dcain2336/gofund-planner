@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GoFund Planner — Missions-trip fundraising &amp; budget planner for small churches</title>
+<meta name="description" content="GoFund Planner tracks per-student missions-trip fundraising, builds the trip budget, and exports a board-ready PDF. Built for small churches. $39 one-time.">
+<link rel="stylesheet" href="styles.css">
+<!-- SHIP-OR-DIE-TRACKER: paste the traffic-tracker snippet from the
+     Ship or Die dashboard (100K Hackathon > dashboard) here, BEFORE any
+     traffic is driven to this page. See docs/CONNECT-CHECKLIST.md step 3.
+     Do not ship real traffic without it: untracked visits don't count. -->
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="logo" aria-hidden="true">✈</span>
+    <div>
+      <h1>GoFund Planner</h1>
+      <p class="tagline">Missions-trip fundraising &amp; budget planner for small churches</p>
+    </div>
+  </div>
+  <div class="top-actions">
+    <button id="buyBtn" class="btn btn-primary">$39 one-time — Buy</button>
+    <button id="licenseBtn" class="btn btn-ghost">Enter license code</button>
+  </div>
+</header>
+
+<div id="demoBanner" class="banner" hidden>
+  <strong>Demo data.</strong> This is a sample trip (NextGen Missions — Guatemala 2027) so you can see every
+  feature. Your real data stays in your browser — nothing is uploaded.
+  <button id="clearDemoBtn" class="btn btn-small">Start empty</button>
+</div>
+<div id="freeBanner" class="banner banner-warn" hidden>
+  <strong>Free version:</strong> 1 trip, up to 3 students. Buy the $39 one-time license for unlimited
+  students and trips. <button id="freeBuyBtn" class="btn btn-small">Buy $39</button>
+</div>
+
+<main id="appView">
+  <section class="card" id="tripCard">
+    <h2>Trip</h2>
+    <div class="grid-2">
+      <label>Trip name <input id="tripName" type="text" placeholder="e.g. NextGen Missions — Guatemala 2027"></label>
+      <label>Destination <input id="tripDestination" type="text" placeholder="e.g. Guatemala City, Guatemala"></label>
+      <label>Departure <input id="tripStart" type="date"></label>
+      <label>Return <input id="tripEnd" type="date"></label>
+    </div>
+    <div class="grid-2">
+      <label>Default per-student goal ($) <input id="defaultGoal" type="number" min="0" step="1" value="1850"></label>
+      <label>Contingency (%) <input id="contingencyPct" type="number" min="0" max="50" step="1" value="10"></label>
+    </div>
+    <p class="hint">Changes save automatically in this browser. Nothing leaves your device.</p>
+  </section>
+
+  <section class="card">
+    <div class="section-head">
+      <h2>Fundraising</h2>
+      <div class="totals" id="fundTotals" aria-live="polite"></div>
+    </div>
+    <div id="studentList"></div>
+    <form id="addStudentForm" class="inline-form">
+      <input id="newStudentName" type="text" placeholder="Student name" required maxlength="80">
+      <input id="newStudentGoal" type="number" min="0" step="1" placeholder="Goal $ (default 1850)">
+      <button class="btn btn-primary" type="submit">Add student</button>
+    </form>
+    <p class="hint" id="studentLimitHint" hidden>Free version limit reached (3 students). Buy the license to add more.</p>
+  </section>
+
+  <section class="card">
+    <div class="section-head">
+      <h2>Trip budget</h2>
+      <div class="totals" id="budgetTotals" aria-live="polite"></div>
+    </div>
+    <table class="budget-table">
+      <thead><tr><th>Category</th><th>Item</th><th>Amount ($)</th><th>Per person?</th><th></th></tr></thead>
+      <tbody id="budgetBody"></tbody>
+    </table>
+    <form id="addBudgetForm" class="inline-form">
+      <select id="newBudgetCategory">
+        <option>Flights</option><option>Lodging</option><option>Food</option>
+        <option>Ground transport</option><option>Insurance</option><option>Supplies</option>
+        <option>Ministry / project</option><option>Other</option>
+      </select>
+      <input id="newBudgetItem" type="text" placeholder="Item (e.g. Round-trip airfare)" required maxlength="100">
+      <input id="newBudgetAmount" type="number" min="0" step="1" placeholder="Amount $" required>
+      <label class="check"><input id="newBudgetPerPerson" type="checkbox" checked> Per person</label>
+      <button class="btn btn-primary" type="submit">Add line</button>
+    </form>
+    <div id="reconcile" class="reconcile" aria-live="polite"></div>
+  </section>
+
+  <section class="card">
+    <h2>Share &amp; export</h2>
+    <p>Each student gets a public fundraising page. The link carries that student's public totals in the
+       address itself — no account, no server. Share it with family, friends, and the church.</p>
+    <div id="shareList"></div>
+    <div class="actions-row">
+      <button id="printBtn" class="btn">Export board report (PDF)</button>
+      <button id="exportBtn" class="btn">Download my data (JSON)</button>
+      <label class="btn">Import data (JSON) <input id="importFile" type="file" accept="application/json" hidden></label>
+      <button id="seedBtn" class="btn btn-ghost">Load demo trip</button>
+      <button id="resetBtn" class="btn btn-danger-ghost">Reset everything</button>
+    </div>
+    <p class="hint">PDF: use your browser's Print dialog and choose “Save as PDF”. The report prints cleanly on one or two pages.</p>
+  </section>
+
+  <section class="card">
+    <h2>How it works</h2>
+    <ol class="how">
+      <li><strong>Add your students</strong> and set each one's fundraising goal.</li>
+      <li><strong>Log donations</strong> as they come in — cash, check, or online.</li>
+      <li><strong>Build the budget</strong> line by line; per-person items multiply by your headcount automatically.</li>
+      <li><strong>Share each student's page</strong> with their family and supporters.</li>
+      <li><strong>Print the board report</strong> for your next missions-team meeting.</li>
+    </ol>
+    <p class="hint">Questions? Email the maker: <a href="mailto:arc.agent.ops@gmail.com">arc.agent.ops@gmail.com</a></p>
+  </section>
+</main>
+
+<!-- Read-only public student page (rendered from the link itself) -->
+<main id="shareView" hidden>
+  <section class="card share-card">
+    <p class="eyebrow" id="shareTripName"></p>
+    <h2 id="shareStudentName"></h2>
+    <p id="shareBlurb"></p>
+    <div class="big-progress">
+      <div class="progress"><div class="progress-fill" id="shareFill"></div></div>
+      <p id="shareAmounts" class="share-amounts"></p>
+    </div>
+    <p id="shareDonors" class="hint"></p>
+    <p class="hint">Raised for a missions trip. Give through the church office or the link your student shared with you.</p>
+    <p class="foot">Made with <a href="./">GoFund Planner</a> — missions-trip fundraising for small churches.</p>
+  </section>
+</main>
+
+<!-- Buy / license modal -->
+<div id="modal" class="modal" hidden>
+  <div class="modal-box">
+    <h2 id="modalTitle">Buy GoFund Planner</h2>
+    <div id="modalBody"></div>
+    <div class="actions-row"><button id="modalClose" class="btn">Close</button></div>
+  </div>
+</div>
+
+<!-- Print-only board report -->
+<div id="printReport" aria-hidden="true"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
