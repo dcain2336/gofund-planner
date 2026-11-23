@@ -1,6 +1,6 @@
 # GoFund Planner
 
-**Missions-trip fundraising & budget planner for small churches. $39 one-time, no subscription.**
+**Missions-trip fundraising & budget planner for small churches. $19.99 one-time, no subscription.**
 
 Small churches run missions-trip fundraising on spreadsheets and guesswork. GoFund Planner is one
 simple tool that does the whole job:
@@ -40,14 +40,17 @@ links need an `http(s)` origin to copy cleanly.
 Verified Nov 23, 2026: fresh public clone, `python3 -m http.server`, and an 18-check automated
 harness run against the cloned files (demo totals, add student + donation, budget math, license
 verify/reject, share-link round-trip with read-only render, print-report build) — all passing.
-A live-browser click-through on the deployed URL is still the last check before announcing it.
+A live-browser click-through on Nov 23 found the Buy modal broken (auto-open on every load,
+Close dead, overlay blocking all clicks); fixed in this deploy (hidden-attribute CSS rule +
+Escape/backdrop/Close dismissal). The parent re-runs the click-through as the last check
+before announcing it.
 
-## Buy — $39 one-time
+## Buy — $19.99 one-time
 
-Free version: 1 trip, up to 3 students, everything else included. The $39 license unlocks
+Free version: 1 trip, up to 3 students, everything else included. The $19.99 license unlocks
 unlimited students and trips, forever, no renewal.
 
-1. Click **$39 one-time — Buy** in the app (Stripe checkout).
+1. Click **$19.99 one-time — Buy** in the app (Stripe checkout).
 2. After paying you get a license code by email (`GFP-XXXX-XXXX`).
 3. Click **Enter license code** in the app, paste your email + code, done.
 
@@ -82,7 +85,7 @@ Refunds: email arc.agent.ops@gmail.com within 14 days, no questions asked.
    without exporting, your trip is gone. Export JSON regularly; cloud sync is the first post-contest
    upgrade.
 2. **The license check is client-side.** A determined user could read `app.js`, see the hash, and
-   mint their own code. Real buyers in churches pay because the tool is worth $39 and the maker
+   mint their own code. Real buyers in churches pay because the tool is worth $19.99 and the maker
    answers email — but server-side verification is a planned upgrade, not a current feature.
 3. **No online donations in the app.** Donations are logged by hand (cash, check, or whatever the
    church already uses). In-app card donations via Stripe are a planned upgrade.
