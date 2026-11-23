@@ -92,6 +92,9 @@ input[type=checkbox] { width: auto; }
 
 .modal { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: flex;
   align-items: center; justify-content: center; padding: 1rem; z-index: 10; }
+/* The hidden attribute must win over the display:flex above, or the modal
+   shows on every load and Close cannot dismiss it. */
+.modal[hidden] { display: none; }
 .modal-box { background: #fff; border-radius: 12px; padding: 1.25rem 1.5rem; max-width: 520px; width: 100%; }
 .modal-box input { margin-bottom: .5rem; }
 #printReport { display: none; }
