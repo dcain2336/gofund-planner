@@ -1,10 +1,10 @@
 /* GoFund Planner — missions-trip fundraising & budget planner for small churches.
    Vanilla JS, no dependencies, no backend. All data lives in this browser's
    localStorage; nothing is uploaded anywhere.
-   Price: $39 one-time. Free version: 1 trip, up to 3 students. */
+   Price: $19.99 one-time. Free version: 1 trip, up to 3 students. */
 'use strict';
 
-var PRICE = 39;
+var PRICE = 19.99;
 /* Set this to your Stripe Payment Link URL after creating it in the Stripe
    Dashboard (see docs/CONNECT-CHECKLIST.md step 1). While empty, the Buy
    button explains the checkout is not connected yet. */
@@ -196,7 +196,8 @@ function renderBudget() {
   $('budgetTotals').textContent = state.budget.length === 0
     ? 'No budget lines yet.'
     : 'Subtotal ' + money(t.subtotal) + ' · contingency ' + money(t.contingency) +
-      ' · total ' + money(t.total) + ' · ' + money(t.perPerson) + ' per person (' + headcount() + ' travelers)';
+      ' · total ' + money(t.total) + ' · ' + money(t.perPerson) + ' per person (' + headcount() +
+      ' traveler' + (headcount() === 1 ? '' : 's') + ')';
   var body = $('budgetBody');
   body.innerHTML = '';
   state.budget.forEach(function (b) {
@@ -317,37 +318,29 @@ function buildPrintReport() {
     '</td></tr></tbody></table>' +
     '<p><strong>' + (ft.goal >= bt.total ? 'Fundraising goals cover the budget with ' + money(ft.goal - bt.total) + ' to spare.'
       : 'Shortfall of ' + money(bt.total - ft.goal) + ' against fundraising goals.') + '</strong></p>' +
-    '<p class="hint">GoFund Planner — $39 one-time. gofund-planner (GitHub: dcain2336/gofund-planner).</p>';
+    '<p class="hint">GoFund Planner — $19.99 one-time. gofund-planner (GitHub: dcain2336/gofund-planner).</p>';
 }
 
-/* ---------- buy / license modal ---------- */
+/* ---------- buy / license modal ----------
+   The modal opens ONLY from a Buy / Enter-license click. It is hidden by
+   default: index.html carries the hidden attribute AND styles.css has a
+   .modal[hidden] rule — a bare .modal display rule used to override the
+   attribute, showing an empty dialog on every load with a dead Close button
+   and blocking every click on the page. */
 function openModal(title, bodyHtml) {
   $('modalTitle').textContent = title;
   $('modalBody').innerHTML = bodyHtml;
   $('modal').hidden = false;
 }
 function closeModal() { $('modal').hidden = true; }
-function buyFlow() {
-  if (STRIPE_PAYMENT_LINK) {
-    window.open(STRIPE_PAYMENT_LINK, '_blank', 'noopener');
-    openModal('Complete your purchase',
-      '<p>Checkout opened in a new tab. After paying, you will get a license code by email — ' +
-      'paste it with “Enter license code” to unlock unlimited students and trips.</p>' +
-      '<p class="hint">Price: $' + PRICE + ' one-time. No subscription, no renewal.</p>');
-  } else {
-    openModal('Checkout is being connected',
-      '<p>The $' + PRICE + ' one-time checkout is not wired up yet — the maker is connecting Stripe ' +
-      'today. Check back soon, or email <a href="mailto:arc.agent.ops@gmail.com">arc.agent.ops@gmail.com</a>.</p>' +
-      '<p class="hint">Meanwhile the free version works fully: 1 trip, up to 3 students, budget builder, share links, PDF export.</p>');
-  }
-}
-function licenseFlow() {
-  openModal('Enter license code',
-    '<p>Bought GoFund Planner? Paste the license code from your purchase email.</p>' +
+function licenseFormHtml() {
+  return '<p>Bought GoFund Planner? Paste the license code from your purchase email.</p>' +
     '<label>Email used at checkout <input id="licEmail" type="text" placeholder="you@church.org"></label>' +
     '<label>License code <input id="licCode" type="text" placeholder="GFP-XXXX-XXXX"></label>' +
     '<button class="btn btn-primary" id="licCheck">Unlock</button> <span id="licMsg" class="hint"></span>' +
-    '<p class="hint">Codes look like GFP-XXXX-XXXX. Lost yours? Email the maker.</p>');
+    '<p class="hint">Codes look like GFP-XXXX-XXXX. Lost yours? Email the maker.</p>';
+}
+function wireLicenseForm() {
   $('licCheck').addEventListener('click', function () {
     var email = $('licEmail').value, code = $('licCode').value;
     if (verifyLicense(email, code)) {
@@ -359,9 +352,34 @@ function licenseFlow() {
     }
   });
 }
+function openBuyModal(title) {
+  var body = '<p><strong>$' + PRICE + ' one-time.</strong> No subscription, no renewal.</p>' +
+    '<p>Unlocks unlimited students and unlimited trips, forever. The free version covers ' +
+    '1 trip and up to 3 students, with the budget builder, share links, and PDF export included.</p>';
+  if (STRIPE_PAYMENT_LINK) {
+    body += '<p><a class="btn btn-primary" href="' + esc(STRIPE_PAYMENT_LINK) +
+      '" target="_blank" rel="noopener">Continue to secure checkout</a></p>' +
+      '<p class="hint">Checkout opens in a new tab. After paying, your license code arrives by email — ' +
+      'paste it below to unlock.</p>';
+  } else {
+    body += '<p class="hint">Checkout is being connected — the maker is wiring up Stripe today. ' +
+      'Check back soon, or email <a href="mailto:arc.agent.ops@gmail.com">arc.agent.ops@gmail.com</a>.</p>';
+  }
+  body += '<hr>' + licenseFormHtml();
+  openModal(title, body);
+  wireLicenseForm();
+}
+function buyFlow() {
+  if (STRIPE_PAYMENT_LINK) { window.open(STRIPE_PAYMENT_LINK, '_blank', 'noopener'); }
+  openBuyModal('Buy GoFund Planner');
+}
+function licenseFlow() { openBuyModal('Enter license code'); }
 
 /* ---------- events ---------- */
 function bindEvents() {
+  if (typeof document.addEventListener === 'function') {
+    document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape') closeModal(); });
+  }
   ['tripName', 'tripDestination', 'tripStart', 'tripEnd'].forEach(function (id) {
     $(id).addEventListener('input', function () {
       var key = id.replace('trip', '').toLowerCase();
